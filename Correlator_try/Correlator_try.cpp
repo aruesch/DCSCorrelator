@@ -2,7 +2,6 @@
 //
 
 #include "stdafx.h"
-//changes made on 17th May
 using namespace std;
 #define TIME_FLEX  0.1048576
 #define FIRSTDELAY   1E-7
