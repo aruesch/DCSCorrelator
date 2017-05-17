@@ -71,6 +71,7 @@ artifacts/
 *.exe
 *.iobj
 *.ipdb
+*.tlog
 
 
 # Chutzpah Test files
