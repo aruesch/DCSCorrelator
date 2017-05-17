@@ -2,7 +2,6 @@
 //
 
 #include "stdafx.h"
-//changes made on 17th May
 using namespace std;
 #define TIME_FLEX  0.1048576
 #define FIRSTDELAY   1E-7
@@ -78,12 +77,13 @@ int main()
 	// Calculate the delay times
 	for (i = 0; i < 16; i++) {
 		DelayTime[i] = (i + 1)*FIRSTDELAY;
-		//cout << DelayTime[i] <<"\n";
+		
 	}
 	//cin.get();
 	for (j = 1; j < 31; j++) {
 		for (i = 0; i < 8; i++) {
 			DelayTime[i + (j - 1) * 8 + 16] = DelayTime[(j - 1) * 8 + 16 + i - 1] + FIRSTDELAY*(float)pow(2, j);
+			//cout << DelayTime[i+(j-1)*8+16] << "\n";
 		}
 	}
 	
@@ -148,7 +148,6 @@ int main()
 			return 1;
 		}
 
-
 		// starts the correlator in autocorrelation mode
 		for (k = 0; k<10; k++)
 		{
@@ -204,7 +203,7 @@ int main()
 				// Display it
 				cout << "Intensities: " << Intensity[0] << " ," << Intensity[1] << " ," << Intensity[2] << " ," << Intensity[3] << endl;
 				cout << "Intensities: " << Intensity[4] << " ," << Intensity[5] << " ," << Intensity[6] << " ," << Intensity[7] << endl;
-			}
+			}//End of while loop (elapsed time within Duration time (as set by user)
 
 			fclose(stream);
 			//stops the correlator
@@ -275,7 +274,7 @@ int main()
 			strcat_s(filename, ".dat");
 			stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
-				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 3], sample[i], baseA[i + 256 * 4], baseB[i + 256 * 4], corr[i + 256 * 4]);
+				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 4], sample[i], baseA[i + 256 * 4], baseB[i + 256 * 4], corr[i + 256 * 4]);
 			fclose(stream);
 			strcpy_s(filename, sub);
 			strcat_s(filename, "\\rawcorrf");
@@ -284,7 +283,7 @@ int main()
 			strcat_s(filename, ".dat");
 			stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
-				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 3], sample[i], baseA[i + 256 * 5], baseB[i + 256 * 5], corr[i + 256 * 5]);
+				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 5], sample[i], baseA[i + 256 * 5], baseB[i + 256 * 5], corr[i + 256 * 5]);
 			fclose(stream);
 			strcpy_s(filename, sub);
 			strcat_s(filename, "\\rawcorrg");
@@ -293,7 +292,7 @@ int main()
 			strcat_s(filename, ".dat");
 			stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
-				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 3], sample[i], baseA[i + 256 * 6], baseB[i + 256 * 6], corr[i + 256 * 6]);
+				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 6], sample[i], baseA[i + 256 * 6], baseB[i + 256 * 6], corr[i + 256 * 6]);
 			fclose(stream);
 			strcpy_s(filename, sub);
 			strcat_s(filename, "\\rawcorrh");
@@ -302,7 +301,7 @@ int main()
 			strcat_s(filename, ".dat");
 			stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
-				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 3], sample[i], baseA[i + 256 * 7], baseB[i + 256 * 7], corr[i + 256 * 7]);
+				fprintf(stream, "%e,%e, %e, %e, %e, %e\n", DelayTime[i], rawcorr[i + 256 * 7], sample[i], baseA[i + 256 * 7], baseB[i + 256 * 7], corr[i + 256 * 7]);
 			fclose(stream);
 		}
 		Usbfree();
