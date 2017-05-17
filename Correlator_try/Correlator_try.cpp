@@ -77,12 +77,13 @@ int main()
 	// Calculate the delay times
 	for (i = 0; i < 16; i++) {
 		DelayTime[i] = (i + 1)*FIRSTDELAY;
-		//cout << DelayTime[i] <<"\n";
+		
 	}
 	//cin.get();
 	for (j = 1; j < 31; j++) {
 		for (i = 0; i < 8; i++) {
 			DelayTime[i + (j - 1) * 8 + 16] = DelayTime[(j - 1) * 8 + 16 + i - 1] + FIRSTDELAY*(float)pow(2, j);
+			//cout << DelayTime[i+(j-1)*8+16] << "\n";
 		}
 	}
 	
@@ -146,7 +147,6 @@ int main()
 			cout << "The card is not present" << endl;
 			return 1;
 		}
-
 
 		// starts the correlator in autocorrelation mode
 		for (k = 0; k<10; k++)
