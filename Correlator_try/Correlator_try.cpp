@@ -315,7 +315,8 @@ int main()
 		cout << "DLL 'flex05oem8chauto100ns_win7.dll' not found. Abort.";
 	}
 
-
+	// Wait for any key input
+	system("pause");
 	return 0;
 }
 
