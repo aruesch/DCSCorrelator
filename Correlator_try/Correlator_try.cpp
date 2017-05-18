@@ -48,7 +48,8 @@ int main()
 	USBUPDATE Update;    // Function pointer
 	USBUPDATERAWDATA UpdateRawdata;    // Function pointer
 	USBFREE Usbfree;    // Function pointer
-	char outPath[255] = "corr results\\";
+	//char outPath[255] = "corr results\\";
+	char outPath[255] = "F:\\Results";
 	char inName[255];
 	cout << "directory name: ";
 	cin.getline(inName, 255);
@@ -58,6 +59,8 @@ int main()
 	size_t convertedChars = 0;
 	mbstowcs_s(&convertedChars, wideName, newsize, outPath, _TRUNCATE);
 	CreateDirectoryW(wideName, NULL);
+
+	//cout << "my directory is " << ExePath() << "\n";
 
 	char sub[255];
 	strcpy_s(sub, outPath);
@@ -140,6 +143,7 @@ int main()
 			return 1;
 		}
 		// Test the presence of the correlator
+		
 		if (Initialize()==1) {
 			cout << "The card is present" << endl;
 		}
@@ -147,6 +151,8 @@ int main()
 			cout << "The card is not present" << endl;
 			return 1;
 		}
+		
+		cout << "Reading correlation values";
 
 		// starts the correlator in autocorrelation mode
 		for (k = 0; k<10; k++)
