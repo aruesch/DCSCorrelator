@@ -40,7 +40,7 @@ int main()
 	float				DelayTime[256];
 	float				trace[8 * 256];
 	double				Intensity[8];
-	FILE				*stream;
+	FILE				*stream, *stream_corr;
 	HINSTANCE hDLL;               // Handle to DLL
 	USBSTART Start;    // Function pointer
 	USBSTOP Stop;    // Function pointer
@@ -48,7 +48,8 @@ int main()
 	USBUPDATE Update;    // Function pointer
 	USBUPDATERAWDATA UpdateRawdata;    // Function pointer
 	USBFREE Usbfree;    // Function pointer
-	char outPath[255] = "corr results\\";
+	//char outPath[255] = "corr results\\";
+	char outPath[255] = "F:\\Results";
 	char inName[255];
 	cout << "directory name: ";
 	cin.getline(inName, 255);
@@ -58,6 +59,8 @@ int main()
 	size_t convertedChars = 0;
 	mbstowcs_s(&convertedChars, wideName, newsize, outPath, _TRUNCATE);
 	CreateDirectoryW(wideName, NULL);
+
+	//cout << "my directory is " << ExePath() << "\n";
 
 	char sub[255];
 	strcpy_s(sub, outPath);
@@ -77,12 +80,13 @@ int main()
 	// Calculate the delay times
 	for (i = 0; i < 16; i++) {
 		DelayTime[i] = (i + 1)*FIRSTDELAY;
-		//cout << DelayTime[i] <<"\n";
+		
 	}
 	//cin.get();
 	for (j = 1; j < 31; j++) {
 		for (i = 0; i < 8; i++) {
 			DelayTime[i + (j - 1) * 8 + 16] = DelayTime[(j - 1) * 8 + 16 + i - 1] + FIRSTDELAY*(float)pow(2, j);
+			//cout << DelayTime[i+(j-1)*8+16] << "\n";
 		}
 	}
 	
@@ -139,6 +143,7 @@ int main()
 			return 1;
 		}
 		// Test the presence of the correlator
+		
 		if (Initialize()==1) {
 			cout << "The card is present" << endl;
 		}
@@ -146,8 +151,7 @@ int main()
 			cout << "The card is not present" << endl;
 			return 1;
 		}
-
-
+		
 		// starts the correlator in autocorrelation mode
 		for (k = 0; k<10; k++)
 		{
@@ -163,7 +167,7 @@ int main()
 			while (ElapsedTime < DurationTime)
 			{
 				// Sleep for a second
-				Sleep(1000);
+				//Sleep(1000);
 				// Hello correlator
 				//cout << "Elapsed time: " << ElapsedTime << "\n";
 				//cout << "trace count: " << tracecnt << "\n";
@@ -171,6 +175,8 @@ int main()
 					cout << "The card is disconnected" << endl;
 					return 1;
 				}
+				cout << "Elapsed time" << ElapsedTime << "Trace count" << tracecnt;
+
 				for (int g = 0; g < 256; g++) {
 					//cout << "sample: " << rawcorr[i] * sample[i] / baseA[i] / baseB[i] << "\n";
 				}
@@ -178,6 +184,7 @@ int main()
 				{
 					for (j = 0; j<8; j++)
 					{
+						//cout << baseA[i + j * 256] << "  " << baseB[i + j * 256] << "  " << rawcorr[i + j * 256];
 						if ((baseA[i + j * 256] != 0) && (baseB[i + j * 256] != 0))
 							corr[i + j * 256] = rawcorr[i + j * 256] * sample[i] / baseA[i + j * 256] / baseB[i + j * 256];
 					}
@@ -212,24 +219,34 @@ int main()
 			Stop();
 			//Clean up
 
+			//File for storing all correlation data
 			strcpy_s(filename, outPath);
 			strcat_s(filename, "\\corr");
-			_itoa_s(k, filenumber, 10);
-			strcat_s(filename, filenumber);
-			strcat_s(filename, ".dat");
-			stream = fopen(filename, "wt");
+			strcat_s(filename, ".txt");
+			stream_corr = fopen(filename, "a");
+			fprintf(stream_corr, "time = %d \n", k);
+
+			//strcpy_s(filename, outPath);
+			//strcat_s(filename, "\\corr");
+			//_itoa_s(k, filenumber, 10);
+			//strcat_s(filename, filenumber);
+			//strcat_s(filename, ".dat");
+			//stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
 			{
-				fprintf(stream, "%e,", DelayTime[i]);
+				fprintf(stream_corr, "%e,", DelayTime[i]);
 				//cout << DelayTime[i] << " ";
 				for (j = 0; j < 8; j++) {
-					fprintf(stream, "%e,", corr[i + 256 * j]);
+					fprintf(stream_corr, "%e,", corr[i + 256 * j]);
 					//cout << corr[i + 256 * j] << " ";
 				}
-				fprintf(stream, "\n");
+				fprintf(stream_corr, "\n");
 				//cout << "\n";
 			}
-			fclose(stream);
+
+			fclose(stream_corr);
+
+			//fclose(stream);
 			strcpy_s(filename, sub);
 			strcat_s(filename, "\\rawcorra");
 			_itoa_s(k, filenumber, 10);
