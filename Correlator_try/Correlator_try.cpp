@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 using namespace std;
-#define TIME_FLEX  0.1048576
+#define TIME_FLEX  0.1048576 //Time taken for acquiring each trace (Correlation v.s time-lag)
 #define FIRSTDELAY   1E-7
 typedef void(__cdecl* USBSTART)();
 // autocorr = 0, cross correlation mode (AxB, BxA, CxD, DxC)  otherwise AxA BxB, CxC DxD.
@@ -177,9 +177,9 @@ int main()
 				}
 				cout << "Elapsed time" << ElapsedTime << "Trace count" << tracecnt;
 
-				for (int g = 0; g < 256; g++) {
-					//cout << "sample: " << rawcorr[i] * sample[i] / baseA[i] / baseB[i] << "\n";
-				}
+				//for (int g = 0; g < 256; g++) {
+				//	//cout << "sample: " << rawcorr[i] * sample[i] / baseA[i] / baseB[i] << "\n";
+				//}
 				for (i = 0; i<256; i++)
 				{
 					for (j = 0; j<8; j++)
