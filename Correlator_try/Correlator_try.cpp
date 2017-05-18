@@ -40,7 +40,7 @@ int main()
 	float				DelayTime[256];
 	float				trace[8 * 256];
 	double				Intensity[8];
-	FILE				*stream;
+	FILE				*stream, *stream_corr;
 	HINSTANCE hDLL;               // Handle to DLL
 	USBSTART Start;    // Function pointer
 	USBSTOP Stop;    // Function pointer
@@ -152,8 +152,6 @@ int main()
 			return 1;
 		}
 		
-		cout << "Reading correlation values";
-
 		// starts the correlator in autocorrelation mode
 		for (k = 0; k<10; k++)
 		{
@@ -169,7 +167,7 @@ int main()
 			while (ElapsedTime < DurationTime)
 			{
 				// Sleep for a second
-				Sleep(1000);
+				//Sleep(1000);
 				// Hello correlator
 				//cout << "Elapsed time: " << ElapsedTime << "\n";
 				//cout << "trace count: " << tracecnt << "\n";
@@ -177,6 +175,8 @@ int main()
 					cout << "The card is disconnected" << endl;
 					return 1;
 				}
+				cout << "Elapsed time" << ElapsedTime << "Trace count" << tracecnt;
+
 				for (int g = 0; g < 256; g++) {
 					//cout << "sample: " << rawcorr[i] * sample[i] / baseA[i] / baseB[i] << "\n";
 				}
@@ -184,6 +184,7 @@ int main()
 				{
 					for (j = 0; j<8; j++)
 					{
+						//cout << baseA[i + j * 256] << "  " << baseB[i + j * 256] << "  " << rawcorr[i + j * 256];
 						if ((baseA[i + j * 256] != 0) && (baseB[i + j * 256] != 0))
 							corr[i + j * 256] = rawcorr[i + j * 256] * sample[i] / baseA[i + j * 256] / baseB[i + j * 256];
 					}
@@ -218,24 +219,34 @@ int main()
 			Stop();
 			//Clean up
 
+			//File for storing all correlation data
 			strcpy_s(filename, outPath);
 			strcat_s(filename, "\\corr");
-			_itoa_s(k, filenumber, 10);
-			strcat_s(filename, filenumber);
-			strcat_s(filename, ".dat");
-			stream = fopen(filename, "wt");
+			strcat_s(filename, ".txt");
+			stream_corr = fopen(filename, "a");
+			fprintf(stream_corr, "time = %d \n", k);
+
+			//strcpy_s(filename, outPath);
+			//strcat_s(filename, "\\corr");
+			//_itoa_s(k, filenumber, 10);
+			//strcat_s(filename, filenumber);
+			//strcat_s(filename, ".dat");
+			//stream = fopen(filename, "wt");
 			for (i = 0; i<256; i++)
 			{
-				fprintf(stream, "%e,", DelayTime[i]);
+				fprintf(stream_corr, "%e,", DelayTime[i]);
 				//cout << DelayTime[i] << " ";
 				for (j = 0; j < 8; j++) {
-					fprintf(stream, "%e,", corr[i + 256 * j]);
+					fprintf(stream_corr, "%e,", corr[i + 256 * j]);
 					//cout << corr[i + 256 * j] << " ";
 				}
-				fprintf(stream, "\n");
+				fprintf(stream_corr, "\n");
 				//cout << "\n";
 			}
-			fclose(stream);
+
+			fclose(stream_corr);
+
+			//fclose(stream);
 			strcpy_s(filename, sub);
 			strcat_s(filename, "\\rawcorra");
 			_itoa_s(k, filenumber, 10);
